@@ -1,47 +1,61 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
-
-export class AppComponent implements OnInit {
+export class AppComponent {
   weekdaysList: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   monthsList: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-  days: string[] = [];
+  currentMonth: number = 0;
   date: Date = new Date();
-  month: number = 0;
-  
-  ngOnInit(): void {
-    this.loadMonthData(0);
+  days: string[] = [];
+
+  constructor() {
+    this.currentMonth = this.date.getMonth();
+    this.loadMonthData(this.currentMonth);
   }
 
-  loadMonthData(month: number) {
-    this.days = [];
-    var monthDate = new Date(this.date.getFullYear(), this.date.getMonth() + month, 1);
-    var monthFirstDay = monthDate.getDay();
-    monthFirstDay = monthFirstDay === 0 ? 7 : monthFirstDay;
-    var totalDays = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
+  get monthName(): string {
+    return this.monthsList[this.currentMonth];
+  }
+  get year(): number {
+    var monthDate = new Date(this.date.getFullYear(), this.currentMonth, 1);
+    return monthDate.getFullYear();
+  }
 
-    for (let i = 1; i < monthFirstDay; i++) {
+  private loadMonthData(month: number): void {  
+    this.days = [];
+    var monthDate = new Date(this.date.getFullYear(), month, 1);
+    var monthFirstDay = monthDate.getDay();
+    var totalDays = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
+  
+    // Si el primer día del mes no es lunes (0), ajustamos el valor
+    if (monthFirstDay !== 1) {
+      monthFirstDay = (monthFirstDay === 0) ? 7 : monthFirstDay;
+      monthFirstDay -= 1;
+    }else  if(monthFirstDay == 1){
+      monthFirstDay = 0;
+    }
+    
+    for (let i = 0; i < monthFirstDay; i++) {
       this.days.push('');
     }
+  
     for (let i = 0; i < totalDays; i++) {
-      this.days.push((i+1).toString());
+      this.days.push((i + 1).toString());
     }
   }
 
-  nextMonth() {
-    this.month++;
-    this.loadMonthData(this.month);
+  public nextMonth(): void {
+    this.currentMonth == this.monthsList.length - 1 ? this.currentMonth = 0 : this.currentMonth++;
+    this.loadMonthData(this.currentMonth);
   }
 
-  prevMonth() {
-    this.month--;
-    this.loadMonthData(this.month);
+  public prevMonth(): void {
+    this.currentMonth == 0 ? this.currentMonth = this.monthsList.length - 1 : this.currentMonth--;
+    this.loadMonthData(this.currentMonth);
   }
 }

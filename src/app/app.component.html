@@ -1,18 +1,15 @@
 <h1>Calendario</h1>
-<h2 class="font-bold mb-2">{{monthsList[month + 2]}} 
-</h2>
+<h2 class="font-bold mb-2">{{ monthName }}, {{year}}</h2>
+
 <div class="m-3 grid grid-cols-7 gap-4">
-    @for (dia of weekdaysList; track dia) {
-    <div class="bg-blue-300 text-center py-2">
-        {{ dia }}
-    </div>
-    }
-    
-    @for (dia of days; track dia) {
-    <div class="bg-gray-200 text-center py-2">
-        {{ dia }}
-    </div>
-    }
+  @for (weekday of weekdaysList; track $index) {
+    <div class="bg-blue-300 text-center py-2">{{ weekday }}</div>
+
+  }
+  @for (day of days; track $index) {
+    <div  class="bg-gray-200 text-center py-2">{{ day }}</div>
+  }
 </div>
+
 <button type="button" class="p-2 rounded bg-blue-300 ms-2 mt-2 me-5" (click)="prevMonth()">prev</button>
 <button type="button" class="p-2 rounded bg-blue-300" (click)="nextMonth()">next</button>
