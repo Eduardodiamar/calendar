@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   weekdaysList: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   monthsList: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   currentMonth: number = 0;
@@ -14,12 +14,17 @@ export class AppComponent {
   days: string[] = [];
 
   constructor() {
+    
+  }
+  ngOnInit(): void {
     this.currentMonth = this.date.getMonth();
     this.loadMonthData(this.currentMonth);
   }
 
+
   get monthName(): string {
-    return this.monthsList[this.currentMonth];
+    var monthDate = new Date(this.date.getFullYear(), this.currentMonth, 1);
+    return this.monthsList[monthDate.getMonth()];
   }
   get year(): number {
     var monthDate = new Date(this.date.getFullYear(), this.currentMonth, 1);
@@ -31,16 +36,17 @@ export class AppComponent {
     var monthDate = new Date(this.date.getFullYear(), month, 1);
     var monthFirstDay = monthDate.getDay();
     var totalDays = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
-  
-    // Si el primer día del mes no es lunes (0), ajustamos el valor
-    if (monthFirstDay !== 1) {
-      monthFirstDay = (monthFirstDay === 0) ? 7 : monthFirstDay;
-      monthFirstDay -= 1;
-    }else  if(monthFirstDay == 1){
-      monthFirstDay = 0;
-    }
+    console.log(monthDate, monthFirstDay, totalDays);
     
-    for (let i = 0; i < monthFirstDay; i++) {
+    // Si el primer día del mes no es lunes (0), ajustamos el valor
+    // if (monthFirstDay !== 1) {
+    //   monthFirstDay = (monthFirstDay === 0) ? 7 : monthFirstDay;
+    //   monthFirstDay -= 1;
+    // }else  if(monthFirstDay == 1){
+    //   monthFirstDay = 0;
+    // }
+    
+    for (let i = 0; i < monthFirstDay-1; i++) {
       this.days.push('');
     }
   
@@ -50,12 +56,14 @@ export class AppComponent {
   }
 
   public nextMonth(): void {
-    this.currentMonth == this.monthsList.length - 1 ? this.currentMonth = 0 : this.currentMonth++;
+    this.currentMonth++
+    // this.currentMonth == this.monthsList.length - 1 ? this.currentMonth = 0 : this.currentMonth++;
     this.loadMonthData(this.currentMonth);
   }
 
   public prevMonth(): void {
-    this.currentMonth == 0 ? this.currentMonth = this.monthsList.length - 1 : this.currentMonth--;
+    this.currentMonth --
+    // this.currentMonth == 0 ? this.currentMonth = this.monthsList.length - 1 : this.currentMonth--;
     this.loadMonthData(this.currentMonth);
   }
 }
