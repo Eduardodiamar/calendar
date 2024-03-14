@@ -36,15 +36,6 @@ export class AppComponent implements OnInit{
     var monthDate = new Date(this.date.getFullYear(), month, 1);
     var monthFirstDay = monthDate.getDay();
     var totalDays = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
-    console.log(monthDate, monthFirstDay, totalDays);
-    
-    // Si el primer día del mes no es lunes (0), ajustamos el valor
-    // if (monthFirstDay !== 1) {
-    //   monthFirstDay = (monthFirstDay === 0) ? 7 : monthFirstDay;
-    //   monthFirstDay -= 1;
-    // }else  if(monthFirstDay == 1){
-    //   monthFirstDay = 0;
-    // }
     
     for (let i = 0; i < monthFirstDay-1; i++) {
       this.days.push('');
@@ -57,13 +48,11 @@ export class AppComponent implements OnInit{
 
   public nextMonth(): void {
     this.currentMonth++
-    // this.currentMonth == this.monthsList.length - 1 ? this.currentMonth = 0 : this.currentMonth++;
     this.loadMonthData(this.currentMonth);
   }
 
   public prevMonth(): void {
     this.currentMonth --
-    // this.currentMonth == 0 ? this.currentMonth = this.monthsList.length - 1 : this.currentMonth--;
     this.loadMonthData(this.currentMonth);
   }
 }
